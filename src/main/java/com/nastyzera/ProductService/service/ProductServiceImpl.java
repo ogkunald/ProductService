@@ -1,10 +1,13 @@
 package com.nastyzera.ProductService.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nastyzera.ProductService.entity.Product;
+import com.nastyzera.ProductService.exception.ProductServiceCustomException;
 import com.nastyzera.ProductService.model.ProductRequest;
+import com.nastyzera.ProductService.model.ProductResponse;
 import com.nastyzera.ProductService.repository.ProductRepository;
 
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +32,31 @@ public class ProductServiceImpl implements ProductService {
 
         log.info("Product Created");
         return product.getProductId();
+    }
+
+    @Override
+    public void reduceQuantity(long productId, long quantity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reduceQuantity'");
+    }
+
+    @Override
+    public ProductResponse getProductById(long productId) {
+        log.info("Get the product for productId: {}", productId);
+        Product product
+        = productRepository.findById(productId)
+        .orElseThrow(() -> new ProductServiceCustomException(
+                "Product with given Id not found",
+                "PRODUCT_NOT_FOUND"
+        ));
+
+        ProductResponse productResponse
+                = new ProductResponse();
+
+        BeanUtils.copyProperties(product, productResponse);
+
+
+        return productResponse;
     }
 
 }
