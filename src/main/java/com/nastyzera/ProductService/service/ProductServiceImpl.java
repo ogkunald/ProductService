@@ -36,8 +36,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void reduceQuantity(long productId, long quantity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reduceQuantity'");
+        log.info("Product id {} stock reduction"+productId);
+        Product product
+        = productRepository.findById(productId)
+        .orElseThrow(() -> new ProductServiceCustomException(
+                "Product with given Id not found",
+                "PRODUCT_NOT_FOUND"
+        ));
+        if(product.getQuantity() < quantity){
+            throw new ProductServiceCustomException("Product "+product.getProductName()+" is out of stock", "PRODUCT_OOS");
+        }else{
+        product.setQuantity(product.getQuantity() - quantity);
+        productRepository.save(product);
+        log.info("Product quantity updated successfully");
+        }
     }
 
     @Override
