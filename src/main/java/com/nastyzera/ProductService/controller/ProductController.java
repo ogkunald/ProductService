@@ -24,7 +24,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAuthority('Admin') || hasAuthority('SCOPE_internal')")
     @PostMapping
     public ResponseEntity<Long> addProduct(@RequestBody ProductRequest productRequest) {
         long productId = productService.addProduct(productRequest);
